@@ -1,5 +1,3 @@
-import { forwardRef } from '@nestjs/common';
-import { UUID } from 'crypto';
 import {
   Column,
   Entity,
@@ -7,42 +5,46 @@ import {
   JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
+  Relation,
 } from 'typeorm';
 
 export type SALARY_TYPE = 'monthly' | 'daily';
 
-@Entity("users")
+@Entity('users')
 export class User {
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column()
-    name: string;
+  @Column()
+  name: string;
 
-    @Column()
-    salaryType: SALARY_TYPE;
+  @Column()
+  salaryType: SALARY_TYPE;
 
-    @Column("decimal")
-    baseSalary: number;
+  @Column('decimal')
+  baseSalary: number;
 
-    @OneToOne(() => Balance)
-    @JoinColumn()
-    balance: Balance;
+  @OneToOne(() => Balance, (balance) => balance.user, {
+    eager: true,
+  })
+  balance: Relation<Balance>;
 }
 
-@Entity("balances")
+@Entity('balances')
 export class Balance {
-    @PrimaryGeneratedColumn("uuid")
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    // @OneToOne(() => User, (user) => user.balance, { onDelete: "CASCADE" })
-    // @JoinColumn({ name: "userID" }) // This is the foreign key column
-    user: User;
+  @OneToOne(() => User, (user) => user.balance, {
+    eager: false,
+  })
+  @JoinColumn() // ✅ Move JoinColumn here to make Balance the FK owner
+  user: Relation<User>;
 
-    @Column("decimal")
-    balance: number;
+  @Column('decimal')
+  balance: number;
 
-    @Index()
-    @Column("timestamp")
-    lastUpdated: Date;
+  @Index()
+  @Column('timestamp')
+  lastUpdated: Date;
 }
