@@ -2,11 +2,13 @@ import {
   Column,
   Entity,
   Index,
-  JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   Relation,
 } from 'typeorm';
+import { Balance } from './balance.entity';
+import { Attendance } from './attendance.entity';
 
 export type SALARY_TYPE = 'monthly' | 'daily';
 
@@ -18,6 +20,7 @@ export class User {
   @Column()
   name: string;
 
+  @Index()
   @Column()
   salaryType: SALARY_TYPE;
 
@@ -28,23 +31,9 @@ export class User {
     eager: true,
   })
   balance: Relation<Balance>;
-}
 
-@Entity('balances')
-export class Balance {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
-  @OneToOne(() => User, (user) => user.balance, {
+  @OneToMany(() => Attendance, (attendance) => attendance.user, {
     eager: false,
   })
-  @JoinColumn() // ✅ Move JoinColumn here to make Balance the FK owner
-  user: Relation<User>;
-
-  @Column('decimal')
-  balance: number;
-
-  @Index()
-  @Column('timestamp')
-  lastUpdated: Date;
+  attendance: Relation<Attendance>[];
 }
