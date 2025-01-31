@@ -35,7 +35,6 @@ export class AttendancesService {
 
       return await this.attendanceRepository.save(userCheckin);
     } catch (error) {
-      console.log(error);
       if (isDuplicateError(error)) {
         throw new ConflictException(
           `user: {${attendance.userID}} has already checked-in for today.`,
