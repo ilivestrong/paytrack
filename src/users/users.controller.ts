@@ -29,6 +29,12 @@ export class UsersController {
     return { success: true };
   }
 
+  @Post(':userID/leave')
+  async leave(@Param() attendance: AttendanceDTO) {
+    await this.attendanceService.applyLeave(attendance);
+    return { success: true };
+  }
+
   @Patch(':userID/checkout')
   async attendance(@Param() attendance: AttendanceDTO) {
     await this.attendanceService.checkout(attendance);

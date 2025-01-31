@@ -9,7 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { QueryFailedError, Repository } from 'typeorm';
 import { AttendanceDTO } from './dto/attendance.dto';
 import { UsersService } from 'src/users/users.service';
-import { Attendance } from './attendance.entity';
+import { Attendance, ATTENDANCE_STATUS } from './attendance.entity';
 
 @Injectable()
 export class AttendancesService {
@@ -19,7 +19,10 @@ export class AttendancesService {
     private userService: UsersService,
   ) {}
 
-  async checkin(attendance: AttendanceDTO) {
+  private async updateAttendanceStatus(
+    attendance: AttendanceDTO,
+    status: ATTENDANCE_STATUS,
+  ) {
     try {
       const { userID } = attendance;
       const user = await this.userService.findByUserID(userID);
@@ -31,6 +34,7 @@ export class AttendancesService {
         user,
         checkIn: new Date(),
         date: today(),
+        status,
       });
 
       return await this.attendanceRepository.save(userCheckin);
@@ -44,6 +48,13 @@ export class AttendancesService {
     }
   }
 
+  async checkin(attendance: AttendanceDTO) {
+    return this.updateAttendanceStatus(attendance, 'present');
+  }
+  async applyLeave(attendance: AttendanceDTO) {
+    return this.updateAttendanceStatus(attendance, 'leave');
+  }
+
   async checkout(attendance: AttendanceDTO) {
     try {
       const { userID } = attendance;
@@ -52,12 +63,16 @@ export class AttendancesService {
         throw new NotFoundException(`user: ${userID} doesn't exists.`);
       }
 
-      const checkIn = await this.attendanceRepository.findOneBy({
+      const userAttendance = await this.attendanceRepository.findOneBy({
         user,
         date: today(),
       });
 
-      if (!checkIn) {
+      if (userAttendance.status === 'leave') {
+        throw new BadRequestException(`user is on leave today`);
+      }
+
+      if (!userAttendance) {
         throw new BadRequestException(
           `No check-in registered for user ${userID} today.`,
         );

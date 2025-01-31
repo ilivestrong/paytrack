@@ -9,6 +9,8 @@ import {
   Unique,
 } from 'typeorm';
 
+export type ATTENDANCE_STATUS = 'present' | 'leave';
+
 @Entity('attendances')
 @Unique(['user', 'date'])
 export class Attendance {
@@ -21,6 +23,9 @@ export class Attendance {
 
   @Column('date')
   date: String;
+
+  @Column()
+  status: ATTENDANCE_STATUS;
 
   @Column({ type: 'timestamp', nullable: false })
   checkIn: Date;
