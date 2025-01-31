@@ -7,8 +7,9 @@ import {
   PrimaryGeneratedColumn,
   Relation,
 } from 'typeorm';
-import { Balance } from './balance.entity';
-import { Attendance } from './attendance.entity';
+
+import { Balance } from 'src/balances/balance.entity';
+import { Attendance } from 'src/attendances/attendance.entity';
 
 export type SALARY_TYPE = 'monthly' | 'daily';
 
@@ -24,7 +25,7 @@ export class User {
   @Column()
   salaryType: SALARY_TYPE;
 
-  @Column('decimal')
+  @Column('decimal', { scale: 2 })
   baseSalary: number;
 
   @OneToOne(() => Balance, (balance) => balance.user, {

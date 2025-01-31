@@ -1,3 +1,4 @@
+import { User } from 'src/users/user.entity';
 import {
   Column,
   Entity,
@@ -5,10 +6,11 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   Relation,
+  Unique,
 } from 'typeorm';
-import { User } from './user.entity';
 
 @Entity('attendances')
+@Unique(['user', 'date'])
 export class Attendance {
   @PrimaryGeneratedColumn('uuid')
   id: string;

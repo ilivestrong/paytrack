@@ -4,8 +4,10 @@ import { UsersService } from './users.service';
 import { AppConfigModule } from 'src/config/app.config.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user.entity';
-import { Balance } from './balance.entity';
-import { Attendance } from './attendance.entity';
+
+import { Balance } from 'src/balances/balance.entity';
+import { AttendancesService } from 'src/attendances/attendances.service';
+import { Attendance } from 'src/attendances/attendance.entity';
 
 @Module({
   imports: [
@@ -13,7 +15,7 @@ import { Attendance } from './attendance.entity';
     TypeOrmModule.forFeature([User, Balance, Attendance]),
   ],
   controllers: [UsersController],
-  providers: [UsersService],
-  exports: [TypeOrmModule],
+  providers: [UsersService, AttendancesService],
+  exports: [UsersService],
 })
 export class UsersModule {}

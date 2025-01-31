@@ -7,8 +7,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ConfigService } from '@nestjs/config';
 import { User } from './users/user.entity';
-import { Balance } from './users/balance.entity';
-import { Attendance } from './users/attendance.entity';
+import { BalancesModule } from './balances/balances.module';
+import { Balance } from './balances/balance.entity';
+import { AttendancesModule } from './attendances/attendances.module';
+import { Attendance } from './attendances/attendance.entity';
 
 @Module({
   imports: [
@@ -30,6 +32,8 @@ import { Attendance } from './users/attendance.entity';
         synchronize: true,
       }),
     }),
+    BalancesModule,
+    AttendancesModule,
   ],
   exports: [AppConfigModule],
 })

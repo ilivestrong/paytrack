@@ -1,3 +1,4 @@
+import { User } from 'src/users/user.entity';
 import {
   Column,
   Entity,
@@ -7,7 +8,6 @@ import {
   PrimaryGeneratedColumn,
   Relation,
 } from 'typeorm';
-import { User } from './user.entity';
 
 @Entity('balances')
 export class Balance {
@@ -20,7 +20,7 @@ export class Balance {
   @JoinColumn()
   user: Relation<User>;
 
-  @Column('decimal')
+  @Column('decimal', { scale: 2 })
   balance: number;
 
   @Index()
