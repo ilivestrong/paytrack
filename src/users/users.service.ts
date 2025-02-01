@@ -1,8 +1,17 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { QueryFailedError, Repository } from 'typeorm';
 import { CreateUserDTO } from './dto/user.dto';
+import {
+  isDuplicateError,
+  isForeignKeyViolationError,
+  isNotNullViolationError,
+} from 'src/shared/util';
 
 @Injectable()
 export class UsersService {
@@ -13,12 +22,13 @@ export class UsersService {
 
   async create(user: CreateUserDTO) {
     try {
-      const { name, email, salaryType, baseSalary } = user;
+      const { name, email, salaryType, baseSalary, companyId } = user;
       const newUser = this.userRepository.create({
         name,
         email,
         salaryType,
         baseSalary,
+        company: { id: companyId },
       });
 
       return await this.userRepository.save(newUser);
@@ -28,6 +38,13 @@ export class UsersService {
           `A user with name: ${user.name} and email: ${user.email} already exists`,
         );
       }
+      if (isNotNullViolationError(error)) {
+        throw new BadRequestException(`companyId is required`);
+      }
+      if (isForeignKeyViolationError(error)) {
+        throw new BadRequestException(`invalid companyId provided`);
+      }
+
       throw error;
     }
   }
@@ -35,11 +52,4 @@ export class UsersService {
   findByUserID(userID: string) {
     return this.userRepository.findOneBy({ id: userID });
   }
-}
-
-function isDuplicateError(error: Error): boolean {
-  return (
-    error instanceof QueryFailedError &&
-    (error as QueryFailedError).message.includes('duplicate key value')
-  );
 }

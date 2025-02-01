@@ -48,7 +48,7 @@ export class User {
   })
   attendances: Relation<Attendance>[];
 
-  @ManyToOne(() => Company, (company) => company.users)
+  @ManyToOne(() => Company, (company) => company.users, { nullable: false })
   @JoinColumn()
   company: Relation<Company>;
 }

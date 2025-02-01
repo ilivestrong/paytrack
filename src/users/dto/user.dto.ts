@@ -24,6 +24,9 @@ export class CreateUserDTO {
   @IsNumber()
   @Min(1)
   baseSalary: number;
+
+  @IsUUID(4)
+  companyId: string;
 }
 
 export class FindUserDTO {
