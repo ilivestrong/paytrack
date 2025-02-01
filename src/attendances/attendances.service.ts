@@ -78,12 +78,8 @@ export class AttendancesService {
         );
       }
 
-      await this.attendanceRepository.update(
-        { user, date: today() },
-        {
-          checkOut: new Date(),
-        },
-      );
+      userAttendance.checkOut = new Date();
+      return await this.attendanceRepository.save(userAttendance);
     } catch (error) {
       throw error;
     }
