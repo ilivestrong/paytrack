@@ -2,7 +2,7 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Company } from './company.entity';
 import { Repository } from 'typeorm';
-import { CreateCompanyDTO } from './dto/company.dto';
+import { CreateCompanyDTO, FilterCompaniesDTO } from './dto/company.dto';
 import { isDuplicateError } from 'src/shared/util';
 
 @Injectable()
@@ -24,5 +24,10 @@ export class CompaniesService {
       }
       throw error;
     }
+  }
+
+  findAll(filter: FilterCompaniesDTO) {
+    const { active } = filter;
+    return this.companyRepository.findBy({ active });
   }
 }
