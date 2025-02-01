@@ -5,8 +5,8 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
-import { QueryFailedError, Repository } from 'typeorm';
-import { CreateUserDTO } from './dto/user.dto';
+import { Repository } from 'typeorm';
+import { CreateUserDTO, GetUserByIDDTO } from './dto/user.dto';
 import {
   isDuplicateError,
   isForeignKeyViolationError,
@@ -49,7 +49,8 @@ export class UsersService {
     }
   }
 
-  findByUserID(userID: string) {
+  findByUserID(filter: GetUserByIDDTO) {
+    const { userID } = filter;
     return this.userRepository.findOneBy({ id: userID });
   }
 }

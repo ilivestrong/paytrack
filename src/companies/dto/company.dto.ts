@@ -9,3 +9,8 @@ export class FilterCompaniesDTO {
   @IsBoolean()
   active: boolean;
 }
+
+export class GetCompanyUsersDTO {
+  @IsUUID()
+  companyID: string;
+}

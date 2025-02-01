@@ -16,6 +16,6 @@ import { Attendance } from 'src/attendances/attendance.entity';
   ],
   controllers: [UsersController],
   providers: [UsersService, AttendancesService],
-  exports: [UsersService],
+  exports: [UsersService, TypeOrmModule],
 })
 export class UsersModule {}

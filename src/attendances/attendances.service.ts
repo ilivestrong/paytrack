@@ -25,7 +25,7 @@ export class AttendancesService {
   ) {
     try {
       const { userID } = attendance;
-      const user = await this.userService.findByUserID(userID);
+      const user = await this.userService.findByUserID({ userID });
       if (!user) {
         throw new NotFoundException(`user: ${userID} doesn't exists.`);
       }
@@ -58,7 +58,7 @@ export class AttendancesService {
   async checkout(attendance: AttendanceDTO) {
     try {
       const { userID } = attendance;
-      const user = await this.userService.findByUserID(userID);
+      const user = await this.userService.findByUserID({ userID });
       if (!user) {
         throw new NotFoundException(`user: ${userID} doesn't exists.`);
       }

@@ -1,5 +1,9 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
-import { CreateCompanyDTO, FilterCompaniesDTO } from './dto/company.dto';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  CreateCompanyDTO,
+  FilterCompaniesDTO,
+  GetCompanyUsersDTO,
+} from './dto/company.dto';
 import { CompaniesService } from './companies.service';
 
 @Controller('companies')
@@ -15,5 +19,10 @@ export class CompaniesController {
   findAll(@Body() filter: FilterCompaniesDTO) {
     const { active } = filter;
     return this.companyService.findAll({ active });
+  }
+
+  @Get(':companyID/users')
+  getUsers(@Param() filter: GetCompanyUsersDTO) {
+    return this.companyService.GetCompanyUsers(filter);
   }
 }
