@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  InternalServerErrorException,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Param, Patch, Post } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDTO } from './dto/user.dto';
 import { AttendanceDTO } from '../attendances/dto/attendance.dto';

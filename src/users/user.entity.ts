@@ -6,20 +6,27 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
   Relation,
+  Unique,
 } from 'typeorm';
 
 import { Balance } from 'src/balances/balance.entity';
 import { Attendance } from 'src/attendances/attendance.entity';
+import { IsEmail } from 'class-validator';
 
 export type SALARY_TYPE = 'monthly' | 'daily';
 
 @Entity('users')
+@Unique(['name', 'email'])
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
   name: string;
+
+  @IsEmail()
+  @Column()
+  email: string;
 
   @Index()
   @Column()
