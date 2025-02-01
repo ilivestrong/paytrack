@@ -11,6 +11,8 @@ import { BalancesModule } from './balances/balances.module';
 import { Balance } from './balances/balance.entity';
 import { AttendancesModule } from './attendances/attendances.module';
 import { Attendance } from './attendances/attendance.entity';
+import { CompaniesModule } from './companies/companies.module';
+import { Company } from './companies/company.entity';
 
 @Module({
   imports: [
@@ -28,12 +30,13 @@ import { Attendance } from './attendances/attendance.entity';
         username: configService.get<string>('dbconfig.username'),
         password: configService.get<string>('dbconfig.password'),
         autoLoadEntities: true,
-        entities: [User, Balance, Attendance],
+        entities: [User, Balance, Company, Attendance],
         synchronize: true,
       }),
     }),
     BalancesModule,
     AttendancesModule,
+    CompaniesModule,
   ],
   exports: [AppConfigModule],
 })

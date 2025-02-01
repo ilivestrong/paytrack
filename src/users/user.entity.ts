@@ -2,6 +2,8 @@ import {
   Column,
   Entity,
   Index,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -12,6 +14,7 @@ import {
 import { Balance } from 'src/balances/balance.entity';
 import { Attendance } from 'src/attendances/attendance.entity';
 import { IsEmail } from 'class-validator';
+import { Company } from 'src/companies/company.entity';
 
 export type SALARY_TYPE = 'monthly' | 'daily';
 
@@ -43,5 +46,9 @@ export class User {
   @OneToMany(() => Attendance, (attendance) => attendance.user, {
     eager: false,
   })
-  attendance: Relation<Attendance>[];
+  attendances: Relation<Attendance>[];
+
+  @ManyToOne(() => Company, (company) => company.users)
+  @JoinColumn()
+  company: Relation<Company>;
 }
