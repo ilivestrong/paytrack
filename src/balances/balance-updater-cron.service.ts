@@ -12,7 +12,6 @@ import {
 } from 'src/balance-job/job-producer.service';
 import * as dayjs from 'dayjs';
 import { ConfigService } from '@nestjs/config';
-import { childSend } from 'bullmq';
 
 @Injectable()
 export class BalanceUpdaterCronService {
