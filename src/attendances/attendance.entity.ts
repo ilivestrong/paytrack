@@ -17,7 +17,7 @@ export class Attendance {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => User, (user) => user.attendances)
+  @ManyToOne(() => User, (user) => user.attendances, { eager: true })
   @JoinColumn()
   user: Relation<User>;
 

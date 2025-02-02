@@ -1,9 +1,19 @@
-export default () => ({
+const DBConfig = () => ({
   dbconfig: {
-    host: process.env.DBHOST || 'localhost',
-    port: process.env.DBPORT || 5432,
-    database: process.env.DATABASE || 'paytrack',
-    username: process.env.username || 'postgres',
-    password: process.env.password || 'postgres',
+    host: process.env.DBHOST,
+    port: process.env.DBPORT,
+    database: process.env.DATABASE,
+    username: process.env.USERNAME,
+    password: process.env.PASSWORD,
   },
 });
+
+const QueueConfig = () => ({
+  queueconfig: {
+    redisHost: process.env.REDIS_HOST,
+    redisPort: process.env.REDIS_PORT,
+    jobBatchSize: process.env.JOB_BATCH_SIZE || 10,
+  },
+});
+
+export { DBConfig, QueueConfig };

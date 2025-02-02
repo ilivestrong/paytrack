@@ -13,12 +13,18 @@ import { AttendancesModule } from './attendances/attendances.module';
 import { Attendance } from './attendances/attendance.entity';
 import { CompaniesModule } from './companies/companies.module';
 import { Company } from './companies/company.entity';
+import { ScheduleModule } from '@nestjs/schedule';
+import { BalanceUpdaterCronService } from './balances/balance-updater-cron.service';
+import { BullModule } from '@nestjs/bullmq';
+import { BalanceJobModule } from './balance-job/balance-job.module';
+import { JobWorkerService } from './balance-job/job-worker.service';
 
 @Module({
   imports: [
     UsersModule,
     AppConfigModule,
     ConfigModule.forRoot(),
+    ScheduleModule.forRoot(),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -34,10 +40,26 @@ import { Company } from './companies/company.entity';
         synchronize: true,
       }),
     }),
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        connection: {
+          host: configService.get<string>('queueconfig.redisHost'),
+          port: configService.get<number>('queueconfig.redisPort'),
+        },
+        defaultJobOptions: {
+          removeOnComplete: true,
+        },
+      }),
+    }),
+
     BalancesModule,
     AttendancesModule,
     CompaniesModule,
+    BalanceJobModule,
   ],
   exports: [AppConfigModule],
+  providers: [BalanceUpdaterCronService, JobWorkerService],
 })
 export class AppModule {}

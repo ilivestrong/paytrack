@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
-import dbconfig from './config';
+import { DBConfig, QueueConfig } from './config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [dbconfig],
+      load: [DBConfig, QueueConfig],
     }),
   ],
   exports: [ConfigModule],

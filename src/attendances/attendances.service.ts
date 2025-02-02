@@ -2,17 +2,22 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
-  InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { QueryFailedError, Repository } from 'typeorm';
-import { AttendanceDTO } from './dto/attendance.dto';
+import { Repository } from 'typeorm';
+import {
+  AttendanceDTO,
+  GetCheckedinUsersFilterDTO,
+} from './dto/attendance.dto';
 import { UsersService } from 'src/users/users.service';
 import { Attendance, ATTENDANCE_STATUS } from './attendance.entity';
+import { getDate, isDuplicateError } from 'src/shared/util';
 
 @Injectable()
 export class AttendancesService {
+  private readonly logger = new Logger(AttendancesService.name);
   constructor(
     @InjectRepository(Attendance)
     private attendanceRepository: Repository<Attendance>,
@@ -33,7 +38,7 @@ export class AttendancesService {
       const userCheckin = this.attendanceRepository.create({
         user,
         checkIn: new Date(),
-        date: today(),
+        date: getDate(),
         status,
       });
 
@@ -54,7 +59,6 @@ export class AttendancesService {
   async applyLeave(attendance: AttendanceDTO) {
     return this.updateAttendanceStatus(attendance, 'leave');
   }
-
   async checkout(attendance: AttendanceDTO) {
     try {
       const { userID } = attendance;
@@ -65,7 +69,7 @@ export class AttendancesService {
 
       const userAttendance = await this.attendanceRepository.findOneBy({
         user,
-        date: today(),
+        date: getDate(),
       });
 
       if (userAttendance.status === 'leave') {
@@ -84,28 +88,12 @@ export class AttendancesService {
       throw error;
     }
   }
-}
 
-function today() {
-  //   return new Date().toISOString().split('T')[0];
-  const localDateTime = convertUTCDateToLocalDate(new Date());
-  return localDateTime.toISOString().split('T')[0];
-}
-
-function convertUTCDateToLocalDate(date) {
-  var newDate = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
-
-  var offset = date.getTimezoneOffset() / 60;
-  var hours = date.getHours();
-
-  newDate.setHours(hours - offset);
-
-  return newDate;
-}
-
-function isDuplicateError(error: Error): boolean {
-  return (
-    error instanceof QueryFailedError &&
-    (error as QueryFailedError).message.includes('duplicate key value')
-  );
+  async getCheckedInUsers(filter: GetCheckedinUsersFilterDTO) {
+    const { date, companyID } = filter;
+    return await this.attendanceRepository.findBy({
+      date,
+      user: { company: { id: companyID } },
+    });
+  }
 }

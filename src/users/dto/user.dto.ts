@@ -29,7 +29,12 @@ export class CreateUserDTO {
   companyId: string;
 }
 
-export class GetUserByIDDTO {
+export class GetUserByIdDTO {
   @IsUUID()
   userID: string;
+}
+
+export class GetUserByCompanyIdDTO {
+  @IsUUID()
+  companyID: string;
 }

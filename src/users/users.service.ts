@@ -6,7 +6,11 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
-import { CreateUserDTO, GetUserByIDDTO } from './dto/user.dto';
+import {
+  CreateUserDTO,
+  GetUserByCompanyIdDTO,
+  GetUserByIdDTO,
+} from './dto/user.dto';
 import {
   isDuplicateError,
   isForeignKeyViolationError,
@@ -49,8 +53,13 @@ export class UsersService {
     }
   }
 
-  findByUserID(filter: GetUserByIDDTO) {
+  findByUserID(filter: GetUserByIdDTO) {
     const { userID } = filter;
     return this.userRepository.findOneBy({ id: userID });
+  }
+
+  findByCompanyID(filter: GetUserByCompanyIdDTO) {
+    const { companyID } = filter;
+    return this.userRepository.findBy({ company: { id: companyID } });
   }
 }
