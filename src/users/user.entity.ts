@@ -5,7 +5,6 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
   Relation,
   Unique,
@@ -38,10 +37,10 @@ export class User {
   @Column('decimal', { scale: 2 })
   salaryOrDailyRate: number;
 
-  @OneToOne(() => Balance, (balance) => balance.user, {
-    eager: true,
+  @OneToMany(() => Balance, (balance) => balance.user, {
+    eager: false,
   })
-  balance: Relation<Balance>;
+  balances: Relation<Balance>[];
 
   @OneToMany(() => Attendance, (attendance) => attendance.user, {
     eager: false,

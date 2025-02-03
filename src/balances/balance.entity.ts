@@ -4,7 +4,7 @@ import {
   Entity,
   Index,
   JoinColumn,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
   Relation,
   Unique,
@@ -19,9 +19,7 @@ export class Balance {
   @Column('date')
   balanceDate: String;
 
-  @OneToOne(() => User, (user) => user.balance, {
-    eager: false,
-  })
+  @ManyToOne(() => User, (user) => user.attendances, { eager: true })
   @JoinColumn()
   user: Relation<User>;
 
