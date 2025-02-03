@@ -17,7 +17,10 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { BalanceUpdaterCronService } from './balances/balance-updater-cron.service';
 import { BullModule } from '@nestjs/bullmq';
 import { BalanceJobModule } from './balance-job/balance-job.module';
-import { JobWorkerService } from './balance-job/job-worker.service';
+import {
+  DailyUsersJobWorkerService,
+  MonthlyUsersJobWorkerService,
+} from './balance-job/job-worker.service';
 
 @Module({
   imports: [
@@ -60,6 +63,10 @@ import { JobWorkerService } from './balance-job/job-worker.service';
     BalanceJobModule,
   ],
   exports: [AppConfigModule],
-  providers: [BalanceUpdaterCronService, JobWorkerService],
+  providers: [
+    BalanceUpdaterCronService,
+    DailyUsersJobWorkerService,
+    MonthlyUsersJobWorkerService,
+  ],
 })
 export class AppModule {}

@@ -1,7 +1,10 @@
 import { BullModule } from '@nestjs/bullmq';
 import { Module } from '@nestjs/common';
 import { JobProducerService } from './job-producer.service';
-import { JobWorkerService } from './job-worker.service';
+import {
+  MonthlyUsersJobWorkerService,
+  DailyUsersJobWorkerService,
+} from './job-worker.service';
 import { QUEUE_NAME } from 'src/shared/util';
 
 @Module({
@@ -14,6 +17,10 @@ import { QUEUE_NAME } from 'src/shared/util';
     }),
   ],
   exports: [JobProducerService],
-  providers: [JobProducerService, JobWorkerService],
+  providers: [
+    JobProducerService,
+    DailyUsersJobWorkerService,
+    MonthlyUsersJobWorkerService,
+  ],
 })
 export class BalanceJobModule {}
