@@ -7,12 +7,17 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
   Relation,
+  Unique,
 } from 'typeorm';
 
 @Entity('balances')
+@Unique(['user', 'balanceDate'])
 export class Balance {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @Column('date')
+  balanceDate: String;
 
   @OneToOne(() => User, (user) => user.balance, {
     eager: false,
