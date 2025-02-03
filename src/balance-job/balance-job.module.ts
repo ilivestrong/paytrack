@@ -6,6 +6,8 @@ import {
   DailyUsersJobWorkerService,
 } from './job-worker.service';
 import { QUEUE_NAME } from 'src/shared/util';
+import { BalancesModule } from 'src/balances/balances.module';
+import { BalancesService } from 'src/balances/balances.service';
 
 @Module({
   imports: [
@@ -15,12 +17,14 @@ import { QUEUE_NAME } from 'src/shared/util';
     BullModule.registerQueue({
       name: QUEUE_NAME.DAILY_USERS,
     }),
+    BalancesModule,
   ],
   exports: [JobProducerService],
   providers: [
     JobProducerService,
     DailyUsersJobWorkerService,
     MonthlyUsersJobWorkerService,
+    BalancesService,
   ],
 })
 export class BalanceJobModule {}

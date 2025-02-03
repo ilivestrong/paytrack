@@ -21,6 +21,7 @@ import {
   DailyUsersJobWorkerService,
   MonthlyUsersJobWorkerService,
 } from './balance-job/job-worker.service';
+import { BalancesService } from './balances/balances.service';
 
 @Module({
   imports: [
@@ -67,6 +68,7 @@ import {
     BalanceUpdaterCronService,
     DailyUsersJobWorkerService,
     MonthlyUsersJobWorkerService,
+    BalancesService,
   ],
 })
 export class AppModule {}
