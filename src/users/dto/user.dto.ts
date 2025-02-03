@@ -23,7 +23,7 @@ export class CreateUserDTO {
 
   @IsNumber()
   @Min(1)
-  baseSalary: number;
+  salaryOrDailyRate: number;
 
   @IsUUID(4)
   companyId: string;

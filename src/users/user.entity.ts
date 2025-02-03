@@ -36,7 +36,7 @@ export class User {
   salaryType: SALARY_TYPE;
 
   @Column('decimal', { scale: 2 })
-  baseSalary: number;
+  salaryOrDailyRate: number;
 
   @OneToOne(() => Balance, (balance) => balance.user, {
     eager: true,

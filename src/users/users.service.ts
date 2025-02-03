@@ -26,12 +26,12 @@ export class UsersService {
 
   async create(user: CreateUserDTO) {
     try {
-      const { name, email, salaryType, baseSalary, companyId } = user;
+      const { name, email, salaryType, salaryOrDailyRate, companyId } = user;
       const newUser = this.userRepository.create({
         name,
         email,
         salaryType,
-        baseSalary,
+        salaryOrDailyRate,
         company: { id: companyId },
       });
 
