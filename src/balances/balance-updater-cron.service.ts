@@ -12,13 +12,14 @@ import {
 } from 'src/balance-job/job-producer.service';
 import * as dayjs from 'dayjs';
 import { ConfigService } from '@nestjs/config';
+import { thaiPublicHolidaysThisYear } from 'src/config/holidays.config';
 
 @Injectable()
 export class BalanceUpdaterCronService {
   private readonly logger = new Logger(BalanceUpdaterCronService.name);
   private readonly jobBatchSize: number;
 
-  private holidays = ['2025-02-05'];
+  private readonly holidays: Record<string, string>;
 
   constructor(
     private companiesService: CompaniesService,
@@ -30,15 +31,20 @@ export class BalanceUpdaterCronService {
     this.jobBatchSize = this.configService.get<number>(
       'queueconfig.jobBatchSize',
     );
+    this.holidays = thaiPublicHolidaysThisYear;
   }
 
-  @Cron(CronExpression.EVERY_10_SECONDS, { disabled: false })
+  /**
+   * This kicks off the midnight cron job which finds all the monthly and
+   * daily users, which are eligible to yesterday's workday pay.
+   * Incase there is a holiday, monthly users get one day pay, but that's not the
+   * case for daily workers.
+   */
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async execute() {
     this.logger.debug(`updating balances now...`);
 
     const yesterday = getDate(DATE_REFERNCE.YESTERDAY);
-
-    // TODO: Get public holidays
 
     const companies = await this.companiesService.findAll({ active: true });
 
@@ -94,11 +100,7 @@ export class BalanceUpdaterCronService {
   }
 
   private isHoliday(date) {
-    this.holidays;
-    for (const d of this.holidays) {
-      if (d === date) return true;
-    }
-    return false;
+    return !!this.holidays[date];
   }
 }
 
@@ -122,6 +124,12 @@ function buildBatches(batchSize: number, source: User[]): BalanceJobBatch[] {
   }
 }
 
+/**
+ * Checks whether a daily user's work hours are >= 9
+ * @param checkin
+ * @param checkout
+ * @returns a bool indicating whether the daily worker is eligible to the day's pay
+ */
 function isDifferenceAtLeast9Hours(checkin: Date, checkout: Date): boolean {
   const diffInHours = dayjs(checkout).diff(dayjs(checkin), 'hour');
   return diffInHours >= 9;
