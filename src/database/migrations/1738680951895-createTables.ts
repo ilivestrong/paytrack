@@ -93,6 +93,7 @@ export class CreateTables1738680951895 implements MigrationInterface {
         DROP TABLE IF EXISTS companies;
         DROP TABLE IF EXISTS users;
         DROP TABLE IF EXISTS balances;
+        DROP TABLE IF EXISTS attendances;
         `);
   }
 }
