@@ -5,7 +5,7 @@ export class CreateCalculateDailyUsersBalanceProcedure1738684542466
 {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
-                create function calculate_daily_users_balance(user_ids text, yesterday_was_holiday boolean) returns void
+                create or replace function calculate_daily_users_balance(user_ids text, yesterday_was_holiday boolean) returns void
                 language plpgsql
                 as
                 $$
