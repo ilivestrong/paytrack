@@ -63,6 +63,28 @@ export class CreateTables1738680951895 implements MigrationInterface {
                         unique ("userId", "balanceDate")
                 );
                  alter table balances owner to postgres;
+
+                 create table attendances
+                (
+                    id          uuid                     default uuid_generate_v4() not null
+                        constraint "PK_483ed97cd4cd43ab4a117516b69"
+                            primary key,
+                    date        date                                                not null,
+                    status      varchar                                             not null,
+                    "checkIn"   timestamp                                           not null,
+                    "checkOut"  timestamp,
+                    "userId"    uuid
+                        constraint "FK_5e20bdbc6b72f0da23eb2ff1b60"
+                            references users,
+                    "createdAt" timestamp with time zone default now()              not null,
+                    "updatedAt" timestamp with time zone default now()              not null,
+                    "deletedAt" timestamp with time zone,
+                    constraint "UQ_670284220e47cb165679195642f"
+                        unique ("userId", date)
+                );
+
+                alter table attendances owner to postgres;
+
             `);
   }
 
