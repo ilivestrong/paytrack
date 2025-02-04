@@ -1,10 +1,10 @@
 import { InjectQueue } from '@nestjs/bullmq';
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Queue } from 'bullmq';
-import { DATE_REFERNCE, getDate, QUEUE_NAME } from 'src/shared/util';
+import { QUEUE_NAME } from 'src/shared/util';
 
 @Injectable()
-export class JobProducerService implements OnModuleInit {
+export class JobProducerService {
   private logger = new Logger(JobProducerService.name);
   constructor(
     @InjectQueue(QUEUE_NAME.MONTHLY_USERS)
@@ -13,10 +13,6 @@ export class JobProducerService implements OnModuleInit {
     @InjectQueue(QUEUE_NAME.DAILY_USERS)
     private dailyUsersQueue: Queue,
   ) {}
-
-  async onModuleInit() {
-    // await this.redisClient.set('processed_batches', 0);
-  }
 
   /**
    * Push each batch as separate job to respective queue
