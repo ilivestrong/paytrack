@@ -6,13 +6,9 @@ import { AppConfigModule } from './config/app.config.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ConfigService } from '@nestjs/config';
-import { User } from './users/user.entity';
 import { BalancesModule } from './balances/balances.module';
-import { Balance } from './balances/balance.entity';
 import { AttendancesModule } from './attendances/attendances.module';
-import { Attendance } from './attendances/attendance.entity';
 import { CompaniesModule } from './companies/companies.module';
-import { Company } from './companies/company.entity';
 import { ScheduleModule } from '@nestjs/schedule';
 import { BalanceUpdaterCronService } from './balances/balance-updater-cron.service';
 import { BullModule } from '@nestjs/bullmq';
