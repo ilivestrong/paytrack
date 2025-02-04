@@ -1,11 +1,13 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class CreateCalculateDailyUsersBalanceProcedure1738659597146 implements MigrationInterface {
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`
-            CREATE FUNCTION calculate_monthly_users_balance(user_ids text, yesterday_was_holiday boolean) RETURNS void
-                LANGUAGE plpgsql
-            AS
+export class CreateCalculateMonthlyUsersBalanceProcedure1738684520962
+  implements MigrationInterface
+{
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`
+            create function calculate_monthly_users_balance(user_ids text, yesterday_was_holiday boolean) returns void
+            language plpgsql
+            as
             $$
             DECLARE
                 user_id UUID;
@@ -61,11 +63,13 @@ export class CreateCalculateDailyUsersBalanceProcedure1738659597146 implements M
             END;
             $$;
 
-            ALTER FUNCTION calculate_monthly_users_balance(text, boolean) OWNER TO postgres;
-        `);
-    }
+            alter function calculate_monthly_users_balance(text, boolean) owner to postgres;
+                `);
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`DROP FUNCTION IF EXISTS calculate_monthly_users_balance(text, boolean)`);
-    }
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(
+      `DROP FUNCTION IF EXISTS calculate_monthly_users_balance(text, boolean);`,
+    );
+  }
 }
