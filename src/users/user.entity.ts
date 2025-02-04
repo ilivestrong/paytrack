@@ -14,15 +14,13 @@ import { Balance } from 'src/balances/balance.entity';
 import { Attendance } from 'src/attendances/attendance.entity';
 import { IsEmail } from 'class-validator';
 import { Company } from 'src/companies/company.entity';
+import { BaseEntity } from 'src/shared/base.entity';
 
 export type SALARY_TYPE = 'monthly' | 'daily';
 
 @Entity('users')
 @Unique(['name', 'email'])
-export class User {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
+export class User extends BaseEntity {
   @Column()
   name: string;
 

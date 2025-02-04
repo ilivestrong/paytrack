@@ -1,3 +1,4 @@
+import { BaseEntity } from 'src/shared/base.entity';
 import { User } from 'src/users/user.entity';
 import {
   Column,
@@ -12,10 +13,7 @@ import {
 
 @Entity('balances')
 @Unique(['user', 'balanceDate'])
-export class Balance {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
+export class Balance extends BaseEntity {
   @Column('date')
   balanceDate: String;
 
@@ -25,8 +23,4 @@ export class Balance {
 
   @Column('decimal', { scale: 2 })
   balance: number;
-
-  @Index()
-  @Column('timestamp')
-  lastUpdated: Date;
 }

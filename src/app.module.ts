@@ -40,7 +40,7 @@ import { BalancesService } from './balances/balances.service';
         username: configService.get<string>('dbconfig.username'),
         password: configService.get<string>('dbconfig.password'),
         autoLoadEntities: true,
-        entities: [User, Balance, Company, Attendance],
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: true,
       }),
     }),

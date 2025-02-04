@@ -1,3 +1,4 @@
+import { BaseEntity } from 'src/shared/base.entity';
 import { User } from 'src/users/user.entity';
 import {
   Column,
@@ -13,7 +14,7 @@ export type ATTENDANCE_STATUS = 'present' | 'leave';
 
 @Entity('attendances')
 @Unique(['user', 'date'])
-export class Attendance {
+export class Attendance extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

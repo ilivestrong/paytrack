@@ -9,13 +9,11 @@ import {
 
 import { IsOptional } from 'class-validator';
 import { User } from 'src/users/user.entity';
+import { BaseEntity } from 'src/shared/base.entity';
 
 @Entity('companies')
 @Unique(['name'])
-export class Company {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
+export class Company extends BaseEntity {
   @Column()
   name: string;
 
