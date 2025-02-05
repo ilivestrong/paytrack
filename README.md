@@ -63,6 +63,12 @@ Please make sure you have a running instance of PostgreSQL database and Redis in
 git clone https://github.com/ilivestrong/paytrack
 ```
 
+change directory
+
+```bash
+cd paytrack
+```
+
 ### 2. Provide .env file
 
 - Using the terminal, change the directory to the root of the project.
@@ -143,7 +149,7 @@ The first step is to create a company.
 
 - To create a company, use below endpoint:
 
-```bash
+```http
 POST http://localhost:3000/api/v1/companies
 Content-Type: application/json
 
@@ -174,7 +180,7 @@ To create a user for a company use below endpoint.
 - The 'salaryOrDailyRate' contains either base salary for monthly user or daily rate for daily user.
 - The 'companyId' is the id of the company for which we are creating the user.
 
-```bash
+```http
 POST http://localhost:3000/api/v1/users
 Content-Type: application/json
 
@@ -210,7 +216,7 @@ Response: **201 Created**
 
 The checkin endpoint marks checkin time for a user (monthly/daily). The userId has to be provided as a param in the endpoint URI.
 
-```bash
+```http
 POST http://localhost:3000/api/v1/users/d2b2f023-b6a7-4654-99d1-3c773181a80c/checkin
 Content-Type: application/json
 Content-Length: 184
@@ -229,7 +235,7 @@ Response: **201 Created**
 
 For testing purpose the app allows the monthly user to apply for a leave. The userId has to be provided as a param in the endpoint URI.
 
-```bash
+```http
 POST http://localhost:3000/api/v1/users/d2b2f023-b6a7-4654-99d1-3c773181a80c/leave
 Content-Type: application/json
 
@@ -251,7 +257,7 @@ The checkout endpoint marks checkout time for a user (monthly/daily). The **user
 
 There is an optional 'test' querystring variable that can be provided. If true, the API will add 10 hours to checkin time of the user as checkout time, so that the daily user becomes eligible for yesterday's day pay.
 
-```bash
+```npm
 PATCH http://localhost:3000/api/v1/users/d2b2f023-b6a7-4654-99d1-3c773181a80c/checkout?test=true
 Content-Type: application/json
 
@@ -283,7 +289,7 @@ Due to shortage of time, unit tests weren't implemented.
 
 ## future-enhancements
 
-This solution isn't perfect as it is restricted to a certain scope only.
+This solution isn't perfect as it is restricted to a certain scope and assumptions. Functional/Non-functional may need to be discussed more for a better and more scalable/distributed solution.
 
 - In a typical scenario, there must be daily data injection from various companies into our system. In lieu of that, API endpoints have been provided to create such data yourself.
 
