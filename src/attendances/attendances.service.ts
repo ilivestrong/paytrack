@@ -36,7 +36,7 @@ export class AttendancesService {
       }
 
       const userCheckin = this.attendanceRepository.create({
-        user,
+        user: {id: userID},
         checkIn: new Date(),
         date: getDate(),
         status,
@@ -68,18 +68,18 @@ export class AttendancesService {
       }
 
       const userAttendance = await this.attendanceRepository.findOneBy({
-        user,
+        user: { id: user.id },
         date: getDate(),
       });
-
-      if (userAttendance.status === 'leave') {
-        throw new BadRequestException(`user is on leave today`);
-      }
 
       if (!userAttendance) {
         throw new BadRequestException(
           `No check-in registered for user ${userID} today.`,
         );
+      }
+
+      if (userAttendance.status === 'leave') {
+        throw new BadRequestException(`user is on leave today`);
       }
 
       userAttendance.checkOut = new Date();
