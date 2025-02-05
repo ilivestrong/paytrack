@@ -27,20 +27,26 @@ export class BalanceUpdaterCronService implements OnModuleInit {
     private usersService: UsersService,
     private jobProducerService: JobProducerService,
     private configService: ConfigService,
-    private schedulerRegistry: SchedulerRegistry
+    private schedulerRegistry: SchedulerRegistry,
   ) {
-    this.jobBatchSize = this.configService.get<number>('queueconfig.jobBatchSize');
+    this.jobBatchSize = this.configService.get<number>(
+      'queueconfig.jobBatchSize',
+    );
     this.holidays = thaiPublicHolidaysThisYear;
   }
 
   onModuleInit() {
-    const cronExpression = this.configService.get<string>('cronconfig.expression'); // Default: every midnight
+    const cronExpression = this.configService.get<string>(
+      'cronconfig.expression',
+    ); // Default: every midnight
     this.addCronJob(cronExpression);
   }
 
   private addCronJob(cronTime: string) {
     const job = new CronJob(cronTime, async () => {
-      this.logger.debug(`Executing balance update cron job at ${new Date().toISOString()}`);
+      this.logger.debug(
+        `Executing balance update cron job at ${new Date().toISOString()}`,
+      );
       await this.execute();
     });
 
@@ -49,8 +55,6 @@ export class BalanceUpdaterCronService implements OnModuleInit {
   }
 
   async execute() {
-    this.logger.debug(`Updating balances now...`);
-
     const yesterday = getDate(DATE_REFERNCE.YESTERDAY);
     const companies = await this.companiesService.findAll({ active: true });
 
@@ -59,30 +63,35 @@ export class BalanceUpdaterCronService implements OnModuleInit {
       let dailyUsers: User[] = [];
 
       if (this.isHoliday(yesterday)) {
-        const allCompanyUsers = await this.usersService.findByCompanyID({ companyID: id });
-
-        monthlyUsers = allCompanyUsers.filter(user => user.salaryType === 'monthly');
-
-        //NOTE: Daily users aren't paid on public holidays.
-      } else {
-        const yesterdayCheckins = await this.attendancesService.getCheckedInUsers({
-          date: yesterday,
+        const allCompanyUsers = await this.usersService.findByCompanyID({
           companyID: id,
         });
 
+        monthlyUsers = allCompanyUsers.filter(
+          (user) => user.salaryType === 'monthly',
+        );
+
+        //NOTE: Daily users aren't paid on public holidays.
+      } else {
+        const yesterdayCheckins =
+          await this.attendancesService.getCheckedInUsers({
+            date: yesterday,
+            companyID: id,
+          });
+
         monthlyUsers = yesterdayCheckins
-          .filter(checkin => checkin.user.salaryType == 'monthly')
-          .map(checkin => checkin.user);
+          .filter((checkin) => checkin.user.salaryType == 'monthly')
+          .map((checkin) => checkin.user);
 
         dailyUsers = yesterdayCheckins
           .filter(
-            checkin =>
+            (checkin) =>
               checkin.user.salaryType == 'daily' &&
               checkin.checkIn instanceof Date &&
               checkin.checkOut instanceof Date &&
-              isDifferenceAtLeast9Hours(checkin.checkIn, checkin.checkOut)
+              isDifferenceAtLeast9Hours(checkin.checkIn, checkin.checkOut),
           )
-          .map(checkin => checkin.user);
+          .map((checkin) => checkin.user);
       }
 
       if (monthlyUsers.length > 0) {
@@ -114,7 +123,7 @@ function buildBatches(batchSize: number, source: User[]): BalanceJobBatch[] {
   for (let i = 0; i < source.length; i += batchSize) {
     const userBatch = source
       .slice(i, i + batchSize)
-      .map(user => user.id)
+      .map((user) => user.id)
       .join(',');
     batches.push({
       userBatch,
