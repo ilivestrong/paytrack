@@ -1,3 +1,5 @@
+import { CronExpression } from "@nestjs/schedule";
+
 const DBConfig = () => ({
   dbconfig: {
     host: process.env.DBHOST,
@@ -16,4 +18,10 @@ const QueueConfig = () => ({
   },
 });
 
-export { DBConfig, QueueConfig };
+const CronConfig = () => ({
+ cronconfig: {
+    expression: process.env.CRON_EXPRESSION || CronExpression.EVERY_DAY_AT_MIDNIGHT,
+  },
+});
+
+export { DBConfig, QueueConfig, CronConfig };
