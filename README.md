@@ -22,6 +22,7 @@ Additionally there are 2 job workers(_having a concurrency of 4 each_) each for 
 - [API Endpoints](#api-endpoints)
 - [Database Schema](#database-schema)
 - [Unit tests](#unit-tests)
+- [High level diagram](#high-level-diagram)
 - [Future Enhancements](#future-enhancements)
 
 ---
@@ -219,7 +220,6 @@ The checkin endpoint marks checkin time for a user (monthly/daily). The userId h
 ```http
 POST http://localhost:3000/api/v1/users/d2b2f023-b6a7-4654-99d1-3c773181a80c/checkin
 Content-Type: application/json
-Content-Length: 184
 
 ```
 
@@ -286,6 +286,10 @@ Response: **200 OK**
 ## unit-tests
 
 Due to shortage of time, unit tests weren't implemented.
+
+## high-level-diagram
+
+![alt text](image-4.png)
 
 ## future-enhancements
 
