@@ -14,6 +14,7 @@ import {
 import { UsersService } from 'src/users/users.service';
 import { Attendance, ATTENDANCE_STATUS } from './attendance.entity';
 import { getDate, isDuplicateError } from 'src/shared/util';
+import * as dayjs from 'dayjs';
 
 @Injectable()
 export class AttendancesService {
@@ -36,7 +37,7 @@ export class AttendancesService {
       }
 
       const userCheckin = this.attendanceRepository.create({
-        user: {id: userID},
+        user: { id: userID },
         checkIn: new Date(),
         date: getDate(),
         status,
@@ -61,7 +62,7 @@ export class AttendancesService {
   }
   async checkout(attendance: AttendanceDTO) {
     try {
-      const { userID } = attendance;
+      const { userID, isTest } = attendance;
       const user = await this.userService.findByUserID({ userID });
       if (!user) {
         throw new NotFoundException(`user: ${userID} doesn't exists.`);
@@ -82,7 +83,14 @@ export class AttendancesService {
         throw new BadRequestException(`user is on leave today`);
       }
 
-      userAttendance.checkOut = new Date();
+      /*
+        For testing, isTest(optional) flag creates a checkout 
+        for user by adding 10 hours to Checkin time.
+      */
+      userAttendance.checkOut = isTest
+        ? dayjs(userAttendance.checkIn).add(10, 'hour').toDate()
+        : new Date();
+
       return await this.attendanceRepository.save(userAttendance);
     } catch (error) {
       throw error;

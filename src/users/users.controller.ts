@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Param, Patch, Post, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDTO } from './dto/user.dto';
 import { AttendanceDTO } from '../attendances/dto/attendance.dto';
@@ -29,8 +29,11 @@ export class UsersController {
   }
 
   @Patch(':userID/checkout')
-  async attendance(@Param() attendance: AttendanceDTO) {
-    await this.attendanceService.checkout(attendance);
+  async attendance(
+    @Param() attendance: AttendanceDTO,
+    @Query('test') isTest: boolean,
+  ) {
+    await this.attendanceService.checkout({ ...attendance, isTest });
     return { success: true };
   }
 }
